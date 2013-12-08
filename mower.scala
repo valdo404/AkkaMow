@@ -14,6 +14,8 @@ object MowerService {
       var instructions = parseInstructions(lines.next())
 
       for(instruction <- instructions) mower.operate(instruction)
+
+      println("Mower has coordinates "+mower.x+','+mower.y+ " and orientation "+mower.orientation)
     }
     println("End parse")
   }
