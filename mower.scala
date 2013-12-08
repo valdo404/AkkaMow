@@ -6,34 +6,33 @@ object MowerService {
   def main(args: Array[String]) {
     println("Beginning parse")
     val lines = io.Source.stdin.getLines
-
-    var lawn = parseSize(lines.next())
+    val lawn = parseSize(lines.next())
 
     while(lines.hasNext) {
-      var mower = parseInitial(lawn, lines.next())
-      var instructions = parseInstructions(lines.next())
+      val mower = parseInitial(lawn, lines.next())
+      val instructions = parseInstructions(lines.next())
 
       for(instruction <- instructions) mower.operate(instruction)
 
-      println("Mower has coordinates "+mower.x+','+mower.y+ " and orientation "+mower.orientation)
+      mower.tell()
     }
     println("End parse")
   }
 
   def parseSize(line: String): Lawn = {
-    val vals = line.split(' ')
-    new Lawn((vals(0).toInt, vals(1).toInt))
+    val values = line.split(' ')
+    new Lawn((values(0).toInt, values(1).toInt))
   }
 
   def parseInitial(lawn: Lawn, line: String): Mower = {
-    val vals = line.split(' ')
-    val orientation = Orientation.withName(vals(2).toString)
+    val values = line.split(' ')
+    val orientation = Orientation.withName(values(2).toString)
 
-    new Mower(lawn, vals(0).toInt,vals(1).toInt, orientation)
+    new Mower(lawn, values(0).toInt, values(1).toInt, orientation)
   }
 
   def parseInstructions(line: String): IndexedSeq[Operation.Value] = {
-    for(cur<-line) yield Operation.withName(cur.toString)
+    for(current<-line) yield Operation.withName(current.toString)
   }
 
 
@@ -46,6 +45,9 @@ object MowerService {
       else if(instruction == Operation.Forward)
         position = forward()
 
+      if(position._1 > lawn.size._1 || position._2 > lawn.size._2)
+        return
+      
       x = position._1
       y = position._2
     }
@@ -74,6 +76,10 @@ object MowerService {
         case Orientation.South => (x, y-1)
         case Orientation.West => (x-1, y)
       }
+    }
+
+    def tell() {
+      println("I have coordinates "+ x + ',' + y + " and orientation " + orientation)
     }
   }
 
