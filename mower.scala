@@ -6,11 +6,11 @@ object MowerService {
   def main(args: Array[String]) {
     println("Beginning parse")
     val lines = io.Source.stdin.getLines
-    val lawn = parseSize(lines.next())
+    val lawn = parseLawn(lines.next())
 
     while(lines.hasNext) {
-      val mower = parseInitial(lawn, lines.next())
-      val instructions = parseInstructions(lines.next())
+      val mower = parseMower(lawn, lines.next())
+      val instructions = parseMowerInstructions(lines.next())
 
       for(instruction <- instructions) mower.operate(instruction)
 
@@ -19,19 +19,19 @@ object MowerService {
     println("End parse")
   }
 
-  def parseSize(line: String): Lawn = {
+  def parseLawn(line: String): Lawn = {
     val values = line.split(' ')
     new Lawn((values(0).toInt, values(1).toInt))
   }
 
-  def parseInitial(lawn: Lawn, line: String): Mower = {
+  def parseMower(lawn: Lawn, line: String): Mower = {
     val values = line.split(' ')
     val orientation = Orientation.withName(values(2).toString)
 
     new Mower(lawn, values(0).toInt, values(1).toInt, orientation)
   }
 
-  def parseInstructions(line: String): IndexedSeq[Operation.Value] = {
+  def parseMowerInstructions(line: String): IndexedSeq[Operation.Value] = {
     for(current<-line) yield Operation.withName(current.toString)
   }
 
