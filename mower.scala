@@ -17,7 +17,7 @@ object MowerService {
   }
 
   /**
-   * Parsing service is a singleton whose goal is parsing flat files
+   * Mower programming service is a singleton whose goal is parsing flat files
    * it also build lawn and mowers. After that it takes mowers and make them move
    */
   object MowerProgrammingService {
