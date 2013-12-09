@@ -5,9 +5,8 @@ import scala.collection.Iterator
 object MowerService {
   def main(args: Array[String]) {
     println("Beginning parse")
-    val lines = io.Source.stdin.getLines
 
-    ParsingService.execute(lines)
+    ParsingService.execute(io.Source.stdin.getLines)
 
     println("End parse")
   }
