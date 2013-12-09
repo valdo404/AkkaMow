@@ -79,6 +79,7 @@ object MowerService {
    * @param x initial x
    * @param y initial y
    * @param orientation initial orientation
+   * @throws IllegalArgumentException if x and y does not comply with lawn size
    */
   class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.Value) {
 
