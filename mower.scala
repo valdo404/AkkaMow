@@ -1,40 +1,47 @@
 import scala.Enumeration
 import scala.collection.immutable.IndexedSeq
-
+import scala.collection.Iterator
 
 object MowerService {
   def main(args: Array[String]) {
     println("Beginning parse")
     val lines = io.Source.stdin.getLines
-    val lawn = parseLawn(lines.next())
 
-    while(lines.hasNext) {
-      val mower = parseMower(lawn, lines.next())
-      val instructions = parseMowerInstructions(lines.next())
+    ParsingService.execute(lines)
 
-      for(instruction <- instructions) mower.operate(instruction)
-
-      mower.tell()
-    }
     println("End parse")
   }
 
-  def parseLawn(line: String): Lawn = {
-    val values = line.split(' ')
-    new Lawn((values(0).toInt, values(1).toInt))
+  object ParsingService {
+    def execute(lines: Iterator[String]) {
+      val lawn = parseLawn(lines.next())
+
+      while(lines.hasNext) {
+        val mower = parseMower(lawn, lines.next())
+        val instructions = parseMowerInstructions(lines.next())
+
+        for(instruction <- instructions) mower.operate(instruction)
+
+        mower.tell()
+      }
+    }
+
+    def parseLawn(line: String): Lawn = {
+      val values = line.split(' ')
+      new Lawn((values(0).toInt, values(1).toInt))
+    }
+
+    def parseMower(lawn: Lawn, line: String): Mower = {
+      val values = line.split(' ')
+      val orientation = Orientation.withName(values(2).toString)
+
+      new Mower(lawn, values(0).toInt, values(1).toInt, orientation)
+    }
+
+    def parseMowerInstructions(line: String): IndexedSeq[Operation.Value] = {
+      for(current<-line) yield Operation.withName(current.toString)
+    }
   }
-
-  def parseMower(lawn: Lawn, line: String): Mower = {
-    val values = line.split(' ')
-    val orientation = Orientation.withName(values(2).toString)
-
-    new Mower(lawn, values(0).toInt, values(1).toInt, orientation)
-  }
-
-  def parseMowerInstructions(line: String): IndexedSeq[Operation.Value] = {
-    for(current<-line) yield Operation.withName(current.toString)
-  }
-
 
   class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.Value) {
     def operate(instruction: Operation.Value) {
@@ -45,7 +52,7 @@ object MowerService {
       else if(instruction == Operation.Forward)
         position = forward()
 
-      if(position._1 > lawn.size._1 || position._2 > lawn.size._2)
+      if(!lawn.in(position))
         return
       
       x = position._1
@@ -85,6 +92,10 @@ object MowerService {
 
   class Lawn(val size: (Int,Int)) {
     val origin=(0,0)
+
+    def in(position: (Int, Int)): Boolean = {
+      position._1 <= size._1 && position._2 <= size._2
+    }
   }
 
   object Orientation extends Enumeration {
