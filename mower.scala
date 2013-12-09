@@ -51,9 +51,8 @@ object MowerService {
         orientation = rotate(instruction)
       else if(instruction == Operation.Forward)
         position = forward()
-
-      if(!lawn.in(position))
-        return
+        if(!lawn.in(position))
+          return
       
       x = position._1
       y = position._2
@@ -62,12 +61,13 @@ object MowerService {
     def rotate(instruction: Operation.Value): Orientation.Value = {
       val rotatingSpec = Map(
         (Orientation.North, Orientation.West),
-        (Orientation.East, Orientation.North),
+        (Orientation.West, Orientation.South),
         (Orientation.South, Orientation.East),
-        (Orientation.West, Orientation.South))
+        (Orientation.East, Orientation.North)
+      )
 
       val reverseSpec = rotatingSpec map {_.swap}
-      
+
       instruction match {
         case Operation.Left => rotatingSpec(orientation)
         case Operation.Right => reverseSpec(orientation)
