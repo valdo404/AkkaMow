@@ -1,5 +1,7 @@
+package mower
+
 import scala.Enumeration
-import scala.collection.immutable.IndexedSeq
+import scala.collection.IndexedSeq
 import scala.collection.Iterator
 
 /** Mower service is a service whose goal is to move mowers */
@@ -33,7 +35,8 @@ object MowerService {
         val mower = parseMower(lawn, lines.next())
         val instructions = parseMowerInstructions(lines.next())
 
-        for(instruction <- instructions) mower.operate(instruction)
+        for(instruction <- instructions)
+          mower.operate(instruction)
 
         mower.tell()
       }
