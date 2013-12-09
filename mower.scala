@@ -4,7 +4,7 @@ import scala.collection.Iterator
 
 object MowerService {
   def main(args: Array[String]) {
-    println("Beginning parse")
+    println("Beginning mowing")
 
     ParsingService.execute(io.Source.stdin.getLines)
 
@@ -27,6 +27,7 @@ object MowerService {
 
     def parseLawn(line: String): Lawn = {
       val values = line.split(' ')
+
       new Lawn((values(0).toInt, values(1).toInt))
     }
 
@@ -59,19 +60,17 @@ object MowerService {
     }
 
     def rotate(instruction: Operation.Value): Orientation.Value = {
-       instruction match {
-        case Operation.Left => orientation match {
-          case Orientation.North => Orientation.West
-          case Orientation.East => Orientation.North
-          case Orientation.South => Orientation.East
-          case Orientation.West => Orientation.South
-        }
-        case Operation.Right => orientation match {
-          case Orientation.West => Orientation.North
-          case Orientation.North => Orientation.East
-          case Orientation.East => Orientation.South
-          case Orientation.South => Orientation.West
-        }
+      val rotatingSpec = Map(
+        (Orientation.North, Orientation.West),
+        (Orientation.East, Orientation.North),
+        (Orientation.South, Orientation.East),
+        (Orientation.West, Orientation.South))
+
+      val reverseSpec = rotatingSpec map {_.swap}
+      
+      instruction match {
+        case Operation.Left => rotatingSpec(orientation)
+        case Operation.Right => reverseSpec(orientation)
       }
     }
 
