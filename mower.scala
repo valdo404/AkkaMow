@@ -86,7 +86,7 @@ object MowerService {
       throw new IllegalArgumentException("Not in lawn")
 
     /**
-     * Operate instuction and updates internal state
+     * Operate given instruction and updates internal state
      *
      * @param instruction operation spec
      */
