@@ -82,8 +82,12 @@ object MowerService {
    */
   class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.Value) {
 
+    if(!lawn.in((x,y)))
+      throw new IllegalArgumentException("Not in lawn")
+    
     /**
      * Operate instuction and updates internal state
+     *
      * @param instruction operation spec
      */
     def operate(instruction: Operation.Value) {
@@ -104,7 +108,7 @@ object MowerService {
      * Does a rotation
      *
      * @param instruction the rotating spec
-     * @return new orientation
+     * @return new Orientation
      */
     def rotate(instruction: Operation.Value): Orientation.Value = {
       val rotatingSpec = Map(
