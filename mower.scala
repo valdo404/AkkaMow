@@ -42,7 +42,7 @@ object MowerService {
     /**
      * Builds a lawn from a lawn configuration line
      * @param line the lawn line
-     * @return a lawn
+     * @return a Lawn
      */
     def parseLawn(line: String): Lawn = {
       val values = line.split(' ')
@@ -53,7 +53,7 @@ object MowerService {
     /**
      * Builds a mower from a mower configuration line
      * @param line the mower description line
-     * @return a mower
+     * @return a Mower
      */
     def parseMower(lawn: Lawn, line: String): Mower = {
       val values = line.split(' ')
@@ -65,7 +65,7 @@ object MowerService {
     /**
      * Builds mower instructions from a mower instructions line
      * @param line the mower instructions line
-     * @return list of mower instructions
+     * @return list of mower Operation
      */
     def parseMowerInstructions(line: String): IndexedSeq[Operation.Value] = {
       for(current<-line) yield Operation.withName(current.toString)
