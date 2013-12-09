@@ -11,16 +11,16 @@ object MowerService {
   def main(args: Array[String]) {
     println("Beginning mowing")
 
-    ParsingService.execute(io.Source.stdin.getLines)
+    MowerProgrammingService.execute(io.Source.stdin.getLines)
 
-    println("End parse")
+    println("Mowed terminated")
   }
 
   /**
    * Parsing service is a singleton whose goal is parsing flat files
    * it also build lawn and mowers. After that it takes mowers and make them move
    */
-  object ParsingService {
+  object MowerProgrammingService {
     /**
      * Execute the service on several lines
      *
@@ -84,7 +84,7 @@ object MowerService {
 
     if(!lawn.in((x,y)))
       throw new IllegalArgumentException("Not in lawn")
-    
+
     /**
      * Operate instuction and updates internal state
      *
@@ -97,7 +97,7 @@ object MowerService {
         orientation = rotate(instruction)
       else if(instruction == Operation.Forward)
         position = forward()
-        if(!lawn.in(position))
+        if(!lawn.in(position)) // do not raise anything
           return
       
       x = position._1
