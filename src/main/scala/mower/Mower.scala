@@ -1,5 +1,6 @@
 package mower
 
+
 /**
  * Mower entity which is able to interpret orders as well
  *
@@ -9,8 +10,7 @@ package mower
  * @param orientation initial orientation
  * @throws IllegalArgumentException if x and y does not comply with lawn size
  */
-class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.Value) {
-
+case class Mower(lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation) {
   if(!lawn.in((x,y)))
     throw new IllegalArgumentException("Not in lawn")
 
@@ -19,14 +19,15 @@ class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.
    *
    * @param instruction operation spec
    */
-  def operate(instruction: Operation.Value) {
+  def operate(instruction: Operation) {
     var position = (x,y)
 
-    if(instruction == Operation.Left || instruction == Operation.Right)
+    if(instruction == ToLeft || instruction == ToRight)
       orientation = rotate(instruction)
-    else if(instruction == Operation.Forward)
+    else if(instruction == Forward)
       position = forward()
-    if(!lawn.in(position)) // do not raise anything
+
+    if(!lawn.in(position))
       return
 
     x = position._1
@@ -39,19 +40,13 @@ class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.
    * @param instruction the rotating spec
    * @return new Orientation
    */
-  def rotate(instruction: Operation.Value): Orientation.Value = {
-    val rotatingSpec = Map(
-      (Orientation.North, Orientation.West),
-      (Orientation.West, Orientation.South),
-      (Orientation.South, Orientation.East),
-      (Orientation.East, Orientation.North)
-    )
-
-    val reverseSpec = rotatingSpec map {_.swap}
+  def rotate(instruction: Operation): Orientation = {
+    val rotatingSpec = Map[Orientation, Orientation] ((North, West), (West, South), (South, East), (East, North))
 
     instruction match {
-      case Operation.Left => rotatingSpec(orientation)
-      case Operation.Right => reverseSpec(orientation)
+      case ToLeft => rotatingSpec.get(orientation).get
+      case ToRight => (rotatingSpec map {_.swap}).get (orientation).get
+      case _ => orientation
     }
   }
 
@@ -61,10 +56,10 @@ class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.
    */
   def forward(): (Int, Int) = {
     orientation match {
-      case Orientation.North => (x, y+1)
-      case Orientation.East => (x+1, y)
-      case Orientation.South => (x, y-1)
-      case Orientation.West => (x-1, y)
+      case North => (x, y+1)
+      case East => (x+1, y)
+      case South => (x, y-1)
+      case West => (x-1, y)
     }
   }
 
@@ -85,7 +80,7 @@ class Mower(val lawn: Lawn, var x: Int, var y:Int, var orientation: Orientation.
  * Lawn entity.
  * @param size lawn size
  */
-class Lawn(val size: (Int,Int)) {
+case class Lawn(size: (Int,Int)) {
   val origin=(0,0)
 
   def in(position: (Int, Int)): Boolean = {
@@ -93,20 +88,14 @@ class Lawn(val size: (Int,Int)) {
   }
 }
 
+class Orientation
+case object North extends Orientation
+case object South extends Orientation
+case object East extends Orientation
+case object West extends Orientation
 
-object Orientation extends Enumeration {
-  val North = Value("N")
-  val East = Value("E")
-  val West = Value("W")
-  val South = Value("S")
-}
-
-/**
- * Operation spec
- */
-object Operation extends Enumeration {
-  val Left = Value("G")
-  val Right = Value("D")
-  val Forward = Value("A")
-}
-
+class Operation
+trait MoveOperation
+case object ToLeft extends Operation
+case object ToRight extends Operation
+case object Forward extends Operation with MoveOperation
