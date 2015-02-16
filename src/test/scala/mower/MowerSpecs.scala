@@ -6,18 +6,18 @@ import org.scalatest._
 class MowerSpecs extends FlatSpec with Matchers {
 
   "A mower" should "operate instructions" in {
-    val lawn = new Lawn((5,5))
+    val lawn = Lawn((5,5))
     val mower = new Mower(lawn, 1, 2, North)
 
-    mower.operate(ToLeft)
-    mower.operate(Forward)
-    mower.operate(ToLeft)
-    mower.operate(Forward)
-    mower.operate(ToLeft)
-    mower.operate(Forward)
-    mower.operate(ToLeft)
-    mower.operate(Forward)
-    mower.operate(Forward)
+    mower(ToLeft)
+    mower(Forward)
+    mower(ToLeft)
+    mower(Forward)
+    mower(ToLeft)
+    mower(Forward)
+    mower(ToLeft)
+    mower(Forward)
+    mower(Forward)
 
     mower.x should be (1)
     mower.y should be (3)
@@ -29,7 +29,7 @@ class MowerSpecs extends FlatSpec with Matchers {
     val lawn = new Lawn((5,5))
     val mower = new Mower(lawn, 1, 1, North)
 
-    mower.operate(Forward)
+    mower(Forward)
 
     mower.x should be (1)
     mower.y should be (2)
@@ -57,4 +57,9 @@ class MowerSpecs extends FlatSpec with Matchers {
 
     MowerParser.parseMower(Lawn((3, 3)), "1 2 N") should matchPattern{case Left(_) => }
   }
+
+  "A list of mower" should "interpret line orders" in {
+    MowerProgrammer.execute(Iterator("3 3", "1 2 N", "LRF", "2 3 E", "LRRF"))
+  }
+
 }

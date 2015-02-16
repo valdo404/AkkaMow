@@ -38,7 +38,7 @@ object MowerParser {
       orientation =>
         coords(values(0), values(1)) fold(
           coords => if (lawn.in(coords))
-            L(Mower(lawn, coords._1, coords._2, orientation)) else NotInLawn, error => E(error)), error => E(error)
+            L(new Mower(lawn, coords._1, coords._2, orientation)) else NotInLawn, error => E(error)), error => E(error)
     )
   }
 
@@ -65,15 +65,15 @@ object MowerParser {
  */
 object MowerProgrammer {
   def execute(lines: Iterator[String]) {
-    val lawn = MowerParser.parseLawn(lines.next())
+    val lawn = MowerParser.parseLawn(lines.next()) fold (lawn => lawn, error => throw new Exception(error))
 
     while(lines.hasNext) {
-      val mower = MowerParser.parseMower(lawn.left.get, lines.next()) fold (
+      val mower = MowerParser.parseMower(lawn, lines.next()) fold (
         possible => possible, error => throw new Exception(error))
       val instructions = MowerParser.parseMowerInstructions(lines.next())
 
       for(instruction <- instructions)
-        instruction fold (instruction => mower.operate(instruction), error => throw new Exception(error))
+        instruction fold (instruction => mower(instruction), error => throw new Exception(error))
 
       mower.tell()
     }
