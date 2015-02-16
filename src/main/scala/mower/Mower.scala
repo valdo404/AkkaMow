@@ -16,9 +16,6 @@ case class Lawn(size: (Int,Int)) {
   def in(position: (Int, Int)): Boolean = position._1 <= size._1 && position._2 <= size._2
 }
 
-/**
- * Mower entity which is able to interpret orders as well
- */
 class Mower(val lawn: Lawn, var x: Int, var y: Int, var orientation: Orientation) {
   val rotate = Map[Orientation, Orientation] ((North, West), (West, South), (South, East), (East, North))
 
