@@ -12,6 +12,10 @@ case object ToLeft extends Operation
 case object ToRight extends Operation
 case object Forward extends Operation
 
+case class Lawn(size: (Int,Int)) {
+  def in(position: (Int, Int)): Boolean = position._1 <= size._1 && position._2 <= size._2
+}
+
 /**
  * Mower entity which is able to interpret orders as well
  */
@@ -31,7 +35,7 @@ class Mower(val lawn: Lawn, var x: Int, var y: Int, var orientation: Orientation
   def operate(instruction: Operation): ((Int, Int), Orientation) = instruction match {
     case ToLeft => ((x, y), rotate(instruction))
     case ToRight => ((x, y), rotate(instruction))
-    case Forward => (forward(x, y, orientation, lawn), rotate(instruction))
+    case Forward => (forward(x, y, orientation), rotate(instruction))
   }
 
   def rotate(instruction: Operation): Orientation = instruction match {
@@ -40,7 +44,7 @@ class Mower(val lawn: Lawn, var x: Int, var y: Int, var orientation: Orientation
     case _ => orientation
   }
 
-  def forward(x: Int, y: Int, direction: Orientation, lawn: Lawn): (Int, Int) = {
+  def forward(x: Int, y: Int, direction: Orientation): (Int, Int) = {
     val position = direction match {
       case North => (x, y+1) case East => (x+1, y) case South => (x, y-1) case West => (x-1, y)
     }
@@ -54,8 +58,4 @@ class Mower(val lawn: Lawn, var x: Int, var y: Int, var orientation: Orientation
   def tell() {
     println("I have coordinates "+ x + ',' + y + " and orientation " + orientation)
   }
-}
-
-case class Lawn(size: (Int,Int)) {
-  def in(position: (Int, Int)): Boolean = position._1 <= size._1 && position._2 <= size._2
 }
