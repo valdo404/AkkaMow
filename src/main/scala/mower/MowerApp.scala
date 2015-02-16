@@ -37,7 +37,7 @@ object MowerParser {
     else orientation(values(2).toString) fold (
       orientation =>
         coords(values(0), values(1)) fold(
-          coords => if (lawn.in(coords)) L(new Mower(lawn, coords._1, coords._2, orientation)) else NotInLawn,
+          coords => if (lawn.in(coords)) L(new Mower(lawn, coords, orientation)) else NotInLawn,
           error => E(error)), error => E(error)
     )
   }

@@ -7,7 +7,7 @@ class MowerSpecs extends FlatSpec with Matchers {
 
   "A mower" should "operate instructions" in {
     val lawn = Lawn((5,5))
-    val mower = new Mower(lawn, 1, 2, North)
+    val mower = new Mower(lawn, (1, 2), North)
 
     mower(ToLeft)
     mower(Forward)
@@ -27,7 +27,7 @@ class MowerSpecs extends FlatSpec with Matchers {
 
   "A mower" should "go forward when required" in {
     val lawn = new Lawn((5,5))
-    val mower = new Mower(lawn, 1, 1, North)
+    val mower = new Mower(lawn, (1, 1), North)
 
     mower(Forward)
 
