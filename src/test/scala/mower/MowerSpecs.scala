@@ -1,6 +1,7 @@
 
 package mower
 
+import mower.actor.MowerActorProgrammer
 import org.scalatest._
 
 class MowerSpecs extends FlatSpec with Matchers {
@@ -62,4 +63,7 @@ class MowerSpecs extends FlatSpec with Matchers {
     MowerProgrammer.execute(Iterator("3 3", "1 2 N", "LRF", "2 3 E", "LRRF"))
   }
 
+  "A list of mower" should "interpret line orders with Akka" in {
+    MowerActorProgrammer.execute(Iterator("3 3", "1 2 N", "LRF", "2 3 E", "LRRF"))
+  }
 }

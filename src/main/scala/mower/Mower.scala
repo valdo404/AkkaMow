@@ -1,6 +1,5 @@
 package mower
 
-
 class Orientation
 case object North extends Orientation
 case object South extends Orientation
@@ -16,7 +15,7 @@ case class Lawn(size: (Int,Int)) {
   def in(position: (Int, Int)): Boolean = position._1 <= size._1 && position._2 <= size._2
 }
 
-class Mower(val lawn: Lawn, var position: (Int, Int), var orientation: Orientation) {
+case class Mower(lawn: Lawn, var position: (Int, Int), var orientation: Orientation) {
   val rotate = Map[Orientation, Orientation] ((North, West), (West, South), (South, East), (East, North))
 
   def apply(instruction: Operation) {

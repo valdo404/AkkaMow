@@ -1,14 +1,6 @@
-
 package mower
-
-import scala.collection.{IndexedSeq, Iterator}
+import scala.util.{Left => L, Right => E}
 import scala.util.control.Exception._
-import scala.util.{Left=>L, Right=>E}
-
-/** Mow it now **/
-object MowerApp extends App {
-    MowerProgrammer.execute(io.Source.stdin.getLines())
-}
 
 /** Mower parser is in charge of mower parsing **/
 object MowerParser {
@@ -46,7 +38,7 @@ object MowerParser {
     case "E" => L(East) case "W" => L(West) case "N" => L(North) case "S" => L(South) case _ => NoOrientation
   }
 
-  def instructions(line: String): IndexedSeq[Either[Operation, String]] = {
+  def instructions(line: String): Seq[Either[Operation, String]] = {
     for (current <- line) yield operation(current.toString)
   }
 
@@ -56,26 +48,5 @@ object MowerParser {
 
   def parseInt(x: String): Either[Int, String] = {
     (catching(classOf[NumberFormatException]) either {x.toInt}).swap.right.flatMap(x => NotAnInteger)
-  }
-}
-
-/**
- * Mower programming service is a singleton whose goal is parsing flat files
- * it also build lawn and mowers. After that it takes mowers and make them move
- */
-object MowerProgrammer {
-  def execute(lines: Iterator[String]) {
-    val lawn = MowerParser.lawn(lines.next()) fold (lawn => lawn, error => throw new Exception(error))
-
-    while(lines.hasNext) {
-      val mower = MowerParser.mower(lawn, lines.next()) fold (
-        possible => possible, error => throw new Exception(error))
-      val instructions = MowerParser.instructions(lines.next())
-
-      for(instruction <- instructions)
-        instruction fold (instruction => mower(instruction), error => throw new Exception(error))
-
-      mower.tell()
-    }
   }
 }
